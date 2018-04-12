@@ -9,8 +9,15 @@ import {
   Platform,
   StyleSheet,
   Text,
-  View
+  View,
+  ScrollView,
+  Image,
+  FlatList,
+  Dimensions
 } from 'react-native';
+
+const width = Dimensions.get('screen').width;
+
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
@@ -22,37 +29,28 @@ const instructions = Platform.select({
 type Props = {};
 export default class App extends Component<Props> {
   render() {
+    const fotos = [{id:1, usuario: 'Tiago'},
+      {id:2, usuario: 'Rafael'}, 
+      {id:3, usuario: 'Alberto'}]
+
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Bem-vindo ao curso de React Native da Alura!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit App.js
-        </Text>
-        <Text style={styles.instructions}>
-          {instructions}
-        </Text>
-      </View>
+      <FlatList style={{marginTop: 20}}
+        keyExtractor={item => item.id}
+        data={fotos}
+        renderItem={ ({item}) =>
+          <View> 
+            <Text>{item.usuario}</Text>
+            <Image source={require('./resources/img/civil_war.jpeg')} 
+                  style={{width: width, height: width}} />
+          </View>
+
+        }
+
+      />
+
+     
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
+
