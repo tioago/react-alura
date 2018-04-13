@@ -43,14 +43,41 @@ class app extends Component {
     .then(json => this.setState({fotos: json}))
   }
 
+  like(idFoto) {
+    const foto = this.state.fotos.find(foto => foto.id === idFoto)
+
+    let novaLista = [];
+    if (foto.likeada) {
+      novaLista = [
+        ...foto.likers,
+        {login: foto.loginUsuario}
+      ]
+    } else {
+      novaLista = foto.likers.filter(liker => {
+        return liker.login !== foto.loginUsuario
+      });
+    }
+
+    const fotoAtualizada = {
+      ...foto,
+      likeada: !foto.likeada,
+      likers: novaLista
+    }
+    
+    const fotos = this.state.fotos.map(foto => foto.id === fotoAtualizada.id ? fotoAtualizada : foto);
+
+    this.setState({fotos})
+    
+  }
+
   render() {
     return (
       <FlatList style={styles.container}
         keyExtractor={item => item.id}
         data={this.state.fotos}
         renderItem={ ({item}) =>
-          <Post foto={item}/>
-
+          <Post foto={item}
+                likeCallback={this.like.bind(this)}/>
         }
 
       />
@@ -60,9 +87,10 @@ class app extends Component {
   }
 }
 
+const margem = Platform.OS === 'ios' ? 20: 0
 const styles = StyleSheet.create({
   container: {
-    marginTop: 20
+    marginTop: margem
   }
 });
 
